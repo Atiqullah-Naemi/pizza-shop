@@ -1,4 +1,4 @@
-# Toy Robot Simulator
+# Pizza shop
 
 This is a simple React JS + typescript ecommerce pizza shop store.
 
