@@ -1,9 +1,16 @@
-import Image from "next/image";
+import prismadb from "@/lib/prismadb";
+import { MainPageClient } from "./main-page-cleint";
 
-export default function Home() {
+export default async function Home() {
+  const locations = await prismadb.location.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
-    <div>
-      <h1 className="text-rose-500">heading</h1>
-    </div>
+    <>
+      <MainPageClient locations={locations} />
+    </>
   );
 }
