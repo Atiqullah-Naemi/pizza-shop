@@ -7,7 +7,7 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { name } = await body;
+    const { name, price, ingredients, imageSrc, locationId } = await body;
 
     if (!params.pizzaId)
       return new NextResponse("pizza id is required", { status: 400 });
@@ -16,9 +16,7 @@ export async function PATCH(
       where: {
         id: params.pizzaId,
       },
-      data: {
-        name,
-      },
+      data: { name, price, ingredients, imageSrc, locationId },
     });
 
     return NextResponse.json(pizza);
