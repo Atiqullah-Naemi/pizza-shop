@@ -2,10 +2,18 @@
 
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useCart from "@/zustand/useCart";
 import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 type NavProps = {
   id: string;
@@ -18,8 +26,15 @@ interface NavbarProps {
 export const MainNav: React.FC<NavbarProps> = ({ data }) => {
   const [isMounted, setIsMounted] = useState(false);
 
+  const pathname = usePathname();
   const router = useRouter();
   const cart = useCart();
+
+  const routes = data.map((route) => ({
+    href: `/store/query?id=${route.id}`,
+    label: route.name,
+    active: pathname === `/store/query?id=${route.id}`,
+  }));
 
   useEffect(() => {
     setIsMounted(true);
@@ -60,17 +75,48 @@ export const MainNav: React.FC<NavbarProps> = ({ data }) => {
           </svg>
         </button>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {data.map((item) => (
-              <li key={item.id}>
+          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 items-center md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            {routes.map((item) => (
+              <li key={item.label}>
                 <Link
-                  href={`/store/query?id=${item.id}`}
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  href={item.href}
+                  className={cn(
+                    "block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent",
+                    item.active ? "text-green-500" : ""
+                  )}
                 >
-                  {item.name}
+                  {item.label}
                 </Link>
               </li>
             ))}
+
+            {/* // manage */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  )}
+                >
+                  Manage
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => router.push("/pizzas")}
+                  className="cursor-pointer"
+                >
+                  Pizzas
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/locations")}
+                  className="cursor-pointer"
+                >
+                  Locations
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* cart */}
             <div className="ml-auto flex items-center gap-x-4">
