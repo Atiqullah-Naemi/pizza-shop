@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -21,19 +21,30 @@ const PizzaForm: React.FC<PizzaFormProps> = ({ initialData, locations }) => {
     ? initialData
     : {
         name: "",
-        locationId: {},
+        locationId: "",
         price: "",
         imageSrc: "",
         ingredients: [],
       };
 
-  const { control, register, handleSubmit } = useForm({
+  const { control, register, handleSubmit, setValue } = useForm({
+    defaultValues,
     mode: "onChange",
   });
   const router = useRouter();
   const { setOpen } = useModal();
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      const location = locations
+        .map(({ id, name }) => ({ label: name, value: id }))
+        .find((c) => c.value === initialData?.locationId);
+
+      setValue("locationId", location);
+    }
+  }, [locations, setValue]);
 
   const onSubmit = async (data: FieldValues) => {
     try {

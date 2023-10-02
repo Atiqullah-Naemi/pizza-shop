@@ -1,17 +1,19 @@
 import Container from "@/components/container";
-import LocationForm from "../client/pizza-form";
+import PizzaForm from "../client/pizza-form";
 import prismadb from "@/lib/prismadb";
 
-const LocationPage = async ({ params }: { params: { locationId: string } }) => {
-  const location = await prismadb.location.findUnique({
+const LocationPage = async ({ params }: { params: { pizzaId: string } }) => {
+  const pizza = await prismadb.pizza.findUnique({
     where: {
-      id: params.locationId,
+      id: params.pizzaId,
     },
   });
 
+  const locations = await prismadb.location.findMany();
+
   return (
     <Container>
-      <LocationForm initialData={location} />
+      <PizzaForm initialData={pizza} locations={locations} />
     </Container>
   );
 };
