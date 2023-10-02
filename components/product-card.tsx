@@ -6,7 +6,6 @@ import { ShoppingCart } from "lucide-react";
 import { Product } from "@/types";
 import useCart from "@/zustand/useCart";
 import { Button } from "./ui/button";
-import { CounterButton } from "./counter-button";
 
 interface ProductCard {
   data: Product;
@@ -31,7 +30,10 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white group cursor-pointer rounded-xl shadow-md w-64">
+    <div
+      className="bg-white group cursor-pointer rounded-xl shadow-md w-64"
+      data-testid="product-card"
+    >
       {/* Image & actions */}
       <div className="aspect-square rounded-xl bg-gray-100 relative">
         <Image
@@ -50,7 +52,11 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
           </div>
         </div>
 
-        <Button onClick={onAddToCart} variant="ghost">
+        <Button
+          onClick={onAddToCart}
+          variant="ghost"
+          data-testid="basket-button"
+        >
           <ShoppingCart size={20} />
         </Button>
       </div>

@@ -8,7 +8,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ items }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="product-list">
       {items.length === 0 && <NoResults />}
       <div className="flex w-full my-5 gap-8 flex-wrap">
         {items.map((item) => (
